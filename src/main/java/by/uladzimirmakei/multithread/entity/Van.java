@@ -1,56 +1,37 @@
 package by.uladzimirmakei.multithread.entity;
 
-import java.util.Objects;
+import by.uladzimirmakei.multithread.entity.exception.VanMultiThreadException;
+import by.uladzimirmakei.multithread.repository.LogisticBaseRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class Van implements Runnable {
+import java.util.concurrent.Callable;
+
+@Data
+@AllArgsConstructor
+public class Van implements Callable<Void> {
+    private static Logger logger = LogManager.getLogger();
     private VanLoadType vanLoad;
 
-    public Van(VanLoadType vanLoad) {
-        this.vanLoad = vanLoad;
-    }
-
-    public VanLoadType getVanLoad() {
-        return vanLoad;
-    }
-
-    public void setVanLoad(VanLoadType vanLoad) {
-        this.vanLoad = vanLoad;
-    }
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Van van = (Van) o;
-        return vanLoad == van.vanLoad;
-    }
+    public Void call() {
+        logger.log(Level.DEBUG, "{} New van thread is created. Current load {}",
+                Thread.currentThread().getName(), this.getVanLoad());
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(vanLoad);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Van{");
-        sb.append("loadType=").append(vanLoad);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public void run() {
-        System.out.println("New van thread is created "
-                + Thread.currentThread().getName());
         LogisticBaseRepository baseRepository = LogisticBaseRepository
                 .getInstance();
-        baseRepository.enterQueue(this);
-        System.out.println(Thread.currentThread().getName()
-                + " van thread is unloaded. Check load "
-                + this.getVanLoad());
+        try {
+            baseRepository.enterQueue(this);
+        } catch (VanMultiThreadException e) {
+            logger.log(Level.ERROR, "Van exception was caught while unloading {}",
+                    e.getMessage());
+        }
+
+        logger.log(Level.DEBUG, "{}  van after unloading is {}"
+                , Thread.currentThread().getName(), this.getVanLoad());
+        return null;
     }
 }
