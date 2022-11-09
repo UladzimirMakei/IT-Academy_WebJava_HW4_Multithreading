@@ -12,13 +12,13 @@ import java.util.concurrent.Callable;
 
 @Data
 @AllArgsConstructor
-public class Van implements Callable<Void> {
+public class Van implements Callable<Integer> {
     private static Logger logger = LogManager.getLogger();
     private VanLoadType vanLoad;
 
     @Override
-    public Void call() {
-        logger.log(Level.DEBUG, "{} New van thread is created. Current load {}",
+    public Integer call() {
+        logger.log(Level.DEBUG, "{} New van thread is started. Current load {}",
                 Thread.currentThread().getName(), this.getVanLoad());
 
         LogisticBaseRepository baseRepository = LogisticBaseRepository
@@ -29,9 +29,7 @@ public class Van implements Callable<Void> {
             logger.log(Level.ERROR, "Van exception was caught while unloading {}",
                     e.getMessage());
         }
-
-        logger.log(Level.DEBUG, "{}  van after unloading is {}"
-                , Thread.currentThread().getName(), this.getVanLoad());
+        baseRepository.release();
         return null;
     }
 }

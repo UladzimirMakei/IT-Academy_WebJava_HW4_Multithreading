@@ -17,26 +17,24 @@ public class MainDemo {
 
     public static void main(String[] args) throws InterruptedException {
 
-        System.out.println("Available number of cores: "
-                + Runtime.getRuntime().availableProcessors());
-        Callable<Void> vanOne = new Van(VanLoadType.FULL);
-        Callable<Void> vanTwo = new Van(VanLoadType.HALF);
-        Callable<Void> vanThree = new Van(VanLoadType.HALF);
-        Callable<Void> vanFour = new Van(VanLoadType.LITTLE);
-        Callable<Void> vanFive = new Van(VanLoadType.FULL);
+        Callable<Integer> vanOne = new Van(VanLoadType.FULL);
+        Callable<Integer> vanTwo = new Van(VanLoadType.HALF);
+        Callable<Integer> vanThree = new Van(VanLoadType.HALF);
+        Callable<Integer> vanFour = new Van(VanLoadType.LITTLE);
+        Callable<Integer> vanFive = new Van(VanLoadType.FULL);
 
         ExecutorService service = Executors.newFixedThreadPool(
                 Runtime.getRuntime().availableProcessors());
 
-        ArrayList<Callable<Void>> todo = new ArrayList<>(5);
+        ArrayList<Callable<Integer>> listVanThread = new ArrayList<>(5);
 
-        todo.add(vanOne);
-        todo.add(vanTwo);
-        todo.add(vanThree);
-        todo.add(vanFour);
-        todo.add(vanFive);
+        listVanThread.add(vanOne);
+        listVanThread.add(vanTwo);
+        listVanThread.add(vanThree);
+        listVanThread.add(vanFour);
+        listVanThread.add(vanFive);
 
-        List<Future<Void>> futures = service.invokeAll(todo);
+        List<Future<Integer>> futures = service.invokeAll(listVanThread);
         service.shutdown();
     }
 }

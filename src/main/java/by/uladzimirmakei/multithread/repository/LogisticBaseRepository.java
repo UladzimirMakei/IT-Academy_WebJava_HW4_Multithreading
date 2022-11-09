@@ -7,18 +7,14 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LogisticBaseRepository {
+
+    private static final int UNLOAD_HANGAR_NUMBER = 3;
     private static Logger logger = LogManager.getLogger();
     private static LogisticBaseRepository baseRepository;
-    private List<Van> vanQueueForUnload;
-
     private UnloadStation unloadStation;
 
     private LogisticBaseRepository() {
-        vanQueueForUnload = new ArrayList<>();
         unloadStation = new UnloadStation();
     }
 
@@ -30,18 +26,19 @@ public class LogisticBaseRepository {
     }
 
     public void enterQueue(Van van) throws VanMultiThreadException {
-        vanQueueForUnload.add(van);
         logger.log(Level.DEBUG, "{} in queue to logistic base",
                 Thread.currentThread().getName());
-        while (!unloadStation.isStationAvailable()) {
-            try {
-                van.wait();
-            } catch (InterruptedException e) {
-                logger.log(Level.ERROR, "Exception in logistic queue {}",
-                        e.getMessage());
-                Thread.currentThread().interrupt();
-                throw new VanMultiThreadException(
-                        "Van thread is interrupted in logistic base queue");
+        synchronized (this) {
+            while (!isStationAvailable()) {
+                try {
+                    this.wait();
+                } catch (InterruptedException e) {
+                    logger.log(Level.ERROR, "Exception in logistic queue {}",
+                            e.getMessage());
+                    Thread.currentThread().interrupt();
+                    throw new VanMultiThreadException(
+                            "Van thread is interrupted in logistic base queue");
+                }
             }
         }
         try {
@@ -50,6 +47,13 @@ public class LogisticBaseRepository {
             logger.log(Level.ERROR, "van exception while entering unload station {}",
                     e.getMessage());
         }
-        vanQueueForUnload.remove(van);
+    }
+
+    private boolean isStationAvailable() {
+        return (unloadStation.getUnloadingCounter() < UNLOAD_HANGAR_NUMBER);
+    }
+
+    public synchronized void release() {
+        this.notifyAll();
     }
 }
