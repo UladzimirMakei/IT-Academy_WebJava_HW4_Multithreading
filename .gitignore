@@ -1,7 +1,7 @@
 .idea/
 logs/
-conf/
 target/
+conf/
 MusicBox.iml
 pom.xml.tag
 pom.xml.releaseBackup
