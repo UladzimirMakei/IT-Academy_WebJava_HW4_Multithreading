@@ -2,7 +2,7 @@ package by.uladzimirmakei.multithread.repository;
 
 import by.uladzimirmakei.multithread.entity.UnloadStation;
 import by.uladzimirmakei.multithread.entity.Van;
-import by.uladzimirmakei.multithread.entity.exception.VanMultiThreadException;
+import by.uladzimirmakei.multithread.exception.VanMultiThreadException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

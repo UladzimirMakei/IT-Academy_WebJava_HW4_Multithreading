@@ -1,6 +1,6 @@
 package by.uladzimirmakei.multithread.entity;
 
-import by.uladzimirmakei.multithread.entity.exception.VanMultiThreadException;
+import by.uladzimirmakei.multithread.exception.VanMultiThreadException;
 import by.uladzimirmakei.multithread.action.UnloadVanAction;
 import by.uladzimirmakei.multithread.action.impl.UnloadVanActionImpl;
 import org.apache.logging.log4j.Level;
