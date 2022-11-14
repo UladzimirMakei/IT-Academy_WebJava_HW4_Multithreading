@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -12,8 +13,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LogisticsBase {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int TERMINAL_NUMBER = 2;
+    private static final Lock instanceLock = new ReentrantLock();
 
     private static LogisticsBase baseRepository;
+    private static AtomicBoolean isInitialized = new AtomicBoolean(false);
     private final Lock getReleaseLock = new ReentrantLock();
 
     private Deque<Condition> waitingQueue;
@@ -28,9 +31,17 @@ public class LogisticsBase {
         }
     }
 
-    public static synchronized LogisticsBase getInstance() {
-        if (baseRepository == null) {
-            baseRepository = new LogisticsBase();
+    public static LogisticsBase getInstance() {
+        if (!isInitialized.get()) {
+            try {
+                instanceLock.lock();
+                if (baseRepository == null) {
+                    baseRepository = new LogisticsBase();
+                    isInitialized.set(true);
+                }
+            } finally {
+                instanceLock.unlock();
+            }
         }
         return baseRepository;
     }
