@@ -12,8 +12,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LogisticsBase {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int TERMINAL_NUMBER = 2;
+
     private static LogisticsBase baseRepository;
     private final Lock getReleaseLock = new ReentrantLock();
+
     private Deque<Condition> waitingQueue;
     private Deque<Terminal> availableTerminalDeque;
 
