@@ -13,7 +13,7 @@ public class Terminal {
     private static final int STATION_UNLOAD_SPEED = 100;
     private static final int EMPTY_VAN_LOAD = 0;
 
-    private long terminalId;
+    private final long terminalId;
 
     public Terminal() {
         this.terminalId = TerminalIdGenerator.getId();
