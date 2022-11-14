@@ -1,5 +1,6 @@
 package by.uladzimirmakei.multithread.entity;
 
+import by.uladzimirmakei.multithread.util.TerminalIdGenerator;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,15 +13,22 @@ public class Terminal {
     private static final int STATION_UNLOAD_SPEED = 100;
     private static final int EMPTY_VAN_LOAD = 0;
 
+    private long terminalId;
+
+    public Terminal() {
+        this.terminalId = TerminalIdGenerator.getId();
+    }
+
     public void unload(Van van) {
-        LOGGER.info("{} van is unloading. Van load is {} kg",
-                van.getVanId(), van.getVanLoadKg());
+        LOGGER.info("{} van is unloading on terminal {}." +
+                        " Van load is {} kg",
+                van.getVanId(), terminalId, van.getVanLoadKg());
         try {
             int unloadTime = calculateUnloadTime(van);
             for (int i = 1; i <= unloadTime; i++) {
                 TimeUnit.SECONDS.sleep(1);
                 System.out.println(van.getVanId()
-                        + " unloads for " + i);
+                        + " van unloads for " + i);
             }
         } catch (InterruptedException e) {
             LOGGER.warn("Terminal caught exception {}",

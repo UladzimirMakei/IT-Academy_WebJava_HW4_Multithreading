@@ -37,8 +37,9 @@ public class Van implements Runnable {
         setState(State.UNLOADING);
         terminal.unload(this);
         logisticsBase.releaseTerminal(terminal);
-        LOGGER.info("{} van unloading is finished. Its load is {}",
-                getVanId(), getVanLoadKg());
+        LOGGER.info("{} van unloading is finished on terminal {}" +
+                        ". Its load is {}",
+                getVanId(), terminal.getTerminalId(), getVanLoadKg());
         setState(Van.State.COMPLETED);
     }
 }
