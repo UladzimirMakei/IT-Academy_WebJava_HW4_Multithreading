@@ -64,10 +64,10 @@ public class LogisticsBase {
                         e.getMessage());
                 Thread.currentThread().interrupt();
             }
-            return availableTerminalDeque.removeFirst();
         } finally {
             getReleaseLock.unlock();
         }
+        return availableTerminalDeque.removeFirst();
     }
 
     public void releaseTerminal(Terminal terminal) {

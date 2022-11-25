@@ -1,5 +1,6 @@
 package by.uladzimirmakei.multithread;
 
+import by.uladzimirmakei.multithread.creator.VanListCreator;
 import by.uladzimirmakei.multithread.entity.Van;
 
 import java.util.List;
@@ -12,10 +13,8 @@ public class MainDemo {
     }
 
     public static void main(String[] args) {
-
-        List<Van> vanList = List.of(new Van(),
-                new Van(), new Van(),
-                new Van(), new Van());
+        VanListCreator creator = new VanListCreator(5);
+        List<Van> vanList = creator.createVanList();
 
         ExecutorService service = Executors.newFixedThreadPool(vanList.size());
         vanList.forEach(service::execute);

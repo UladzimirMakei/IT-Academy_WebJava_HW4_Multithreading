@@ -31,7 +31,7 @@ public class Terminal {
                         + " van unloads for " + i);
             }
         } catch (InterruptedException e) {
-            LOGGER.warn("Terminal caught exception {}",
+            LOGGER.warn("TerminalBlock caught exception {}",
                     e.getMessage());
             Thread.currentThread().interrupt();
         }

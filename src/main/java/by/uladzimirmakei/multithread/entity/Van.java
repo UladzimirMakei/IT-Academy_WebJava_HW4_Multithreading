@@ -30,8 +30,7 @@ public class Van implements Runnable {
         LOGGER.info("{} van arrived at logistic base. "
                         + "Does it have perishable goods - {}",
                 getVanId(), isPerishable);
-        LogisticsBase logisticsBase = LogisticsBase
-                .getInstance();
+        LogisticsBase logisticsBase = LogisticsBase.getInstance();
         setState(State.WAITING);
         Terminal terminal = logisticsBase.getTerminal(isPerishable);
         setState(State.UNLOADING);
